@@ -17,12 +17,40 @@
 void *philo_routine(void *ptr)
 {
 	t_philosopher *philo;
-	philo = (t_philosopher *)ptr;
 
-	printf("philo: %d is thinking\n", philo->philo_id);
-	printf("philo: %d right fork: %d\n", philo->philo_id, philo->right_fork);
-	printf("philo: %d left fork: %d\n", philo->philo_id, philo->left_fork);
+	philo = (t_philosopher *)ptr;
+	// printf("philo: %d is thinking\n", philo->philo_id);
+	// printf("philo: %d right fork: %d\n", philo->philo_id, philo->right_fork);
+	// printf("philo: %d left fork: %d\n", philo->philo_id, philo->left_fork);
 	return (NULL);
+}
+
+pthread_mutex_t *destroy_forks_mutxes(pthread_mutex_t *ptr, t_parameters *param)
+{
+	int	i;
+
+	i = 0;
+	while(i < param->number_of_philosophers)
+	{
+		pthread_mutex_destroy(&ptr[i]);
+		i++;
+	}
+	return (ptr);
+}
+
+pthread_mutex_t *initialize_forks_mutxes(t_parameters *param)
+{
+	pthread_mutex_t	*ptr;
+	int				i;
+
+	ptr = malloc(sizeof(pthread_mutex_t *) * param->number_of_philosophers);
+	i = 0;
+	while(i < param->number_of_philosophers)
+	{
+		pthread_mutex_init(&ptr[i], NULL);
+		i++;
+	}
+	return (ptr);
 }
 
 void create_philos_threads(t_parameters *ptr)
@@ -31,6 +59,7 @@ void create_philos_threads(t_parameters *ptr)
 	int	i;
 
 	philos->param = ptr;
+	philos->param->forks = initialize_forks_mutxes(ptr);
 	i = 0;
 	while(i < ptr->number_of_philosophers)
 	{

@@ -16,6 +16,7 @@ typedef struct s_parameters
 	int				must_eat;
 	int				ac;
 	char			**av;
+	pthread_mutex_t	*forks;
 }	t_parameters;
 
 typedef struct s_philosopher
